@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkosiara <jkosiara@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 16:14:57 by jkosiara          #+#    #+#             */
-/*   Updated: 2021/10/21 12:01:38 by jkosiara         ###   ########.fr       */
+/*   Updated: 2022/03/08 12:35:37 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 # include <pthread.h>
 #include <sys/time.h>
 
+#define ERR_ARG		"Wrong number of philosophers"
+#define ERR_ARG_2	"Wrong input"
+
+
 /* pthread_mutex_t è una struttura che contiene:
 - Nome del mutex
 - Proprietario
@@ -28,14 +32,22 @@
 … e simili */
 
 typedef struct s_philo{
-	
+	int number_of_philosophers;
+	int fork_l;
+	int fork_r;
+	int mutex;
+	int forks;
 }				t_philo;
 
 typedef struct s_info{
-	int number_of_philosophers;
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
+	int number_of_times_each_philosopher_must_eat;
+	int all_ate;
+	int died;
+	int meals;
+	t_philo	*philo;
 }				t_info;
 
 static void	ft_parsing(t_info *info, int argc, char *argv[]);
