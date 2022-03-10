@@ -160,6 +160,9 @@ int main(int argc, char **argv)
 		return (ft_err(ERR_ARG));
 	if (init_philo(argv, &info) == 1)
 		return (ft_err(ERR_ARG_2));
-	
-	
+	if (init_pthread(&info) == 1)
+		ft_philo(&info);
+	else
+		return (ft_err(ERR_INIT));	
+	return (0);
 }

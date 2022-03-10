@@ -21,6 +21,7 @@
 
 #define ERR_ARG		"Wrong number of philosophers"
 #define ERR_ARG_2	"Wrong input"
+#define ERR_INIT	"Error in initialization."
 
 
 /* pthread_mutex_t è una struttura che contiene:
@@ -37,6 +38,8 @@ typedef struct s_philo{
 	int fork_r;
 	int mutex;
 	int forks;
+	pthread_mutex_t *mutex;
+
 }				t_philo;
 
 typedef struct s_info{
