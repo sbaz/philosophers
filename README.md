@@ -1,5 +1,5 @@
 # philosophers
-This [42] (https://42.fr/en/homepage/) project is intended as a first look at multithreading
+This [42](https://42.fr/en/homepage/) project is intended as a first look at multithreading
 
 # How to run
 Compile with `make` 
