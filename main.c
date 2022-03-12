@@ -85,17 +85,6 @@
 
 // }
 
-void	declare_philosophers(t_info *info)
-{
-	int i;
-
-	i = 0;
-	while(i < info->philo->number_of_philosophers)
-	{
-		if (pthread_mutex_lock(info->philo->fork_l))
-			return i;
-	}
-}
 
 static int ft_check_args(char **argv)
 {
@@ -110,45 +99,74 @@ static int ft_check_args(char **argv)
 	}
 }
 
-int	ft_init_philo(t_info *info)
+int	init_philo2(t_info *info)
 {
-	info->philo->mutex = malloc(sizeof(info->philo->mutex) *
-		info->philo->number_of_philosophers);
-	info->philo->forks = malloc(sizeof(info->philo->forks) *
-		info->philo->number_of_philosophers);
-	if (!info->philo->mutex || !info->philo->forks)
-		return (0);
-	memset(info->philo->forks, 0, info->philo->number_of_philosophers);
-	ft_init_threads_mutexs(info);
-	if (!ft_philos_launch(info))
-		return (0);
-	return (1);
+	int	i;
 
+	i = 0;
+	info->forks = malloc(sizeof(pthread_mutex_t) * info->number_of_philosophers);
+	if (!info->forks)
+		return (1);
+	while (i < info->number_of_philosophers)
+	{
+		if (pthread_mutex_init(&info->forks[i], NULL) != 0)
+			return (1);
+		if (pthread_mutex_init(&info->philo[i].mutex, NULL) != 0)
+			return (1);
+		i++;
+	}
+	if (pthread_mutex_init(&info->philo->output, NULL) != 0)
+		return (1);
+	return (0);
+}
+}
+
+void	init_thinkeatsleep(t_info *info, char **argv)
+{
+	int i;
+
+	i = 0;
+	while(i < info->number_of_philosophers)
+	{
+		info->philo->time_to_die = ft_atoi(argv[2]);
+		info->philo->time_to_eat = ft_atoi(argv[3]);
+		info->philo->time_to_sleep = ft_atoi(argv[4]);
+		if (argv[5])
+			info->philo[i].meals = ft_atoi(argv[5]);
+		else
+			info->philo[i].meals = -1;
+//		info->philo[i].run_time = get_time();
+		info->philo[i].starv_timer = get_time();
+		info->philo[i].output = &info->philo->output;
+		info->philo[i].left_fork = &info->forks[i];
+		info->philo[i].right_fork = &info->forks[(i + 1) % info->number_of_philosophers];
+		i++;
+	}
+	if (info->number_of_philosophers < 2 || info->philo->time_to_die < 0 || 
+		info->philo->time_to_eat < 0 || info->philo->time_to_sleep < 0)
+		return (1);
 }
 
 int	init_philo(char **argv, t_info *info)
 {
 	if (ft_check_args(argv))
 		return (1);
-	info->philo->number_of_philosophers = ft_atoi(argv[1]);
-	info->time_to_die = ft_atoi(argv[2]);
-	info->time_to_eat = ft_atoi(argv[3]);
-	info->time_to_sleep = ft_atoi(argv[4]);
-	info->all_ate = 0;
-	info->died = 0;
-	if (info->philo->number_of_philosophers < 2 || info->time_to_die < 0 || 
-		info->time_to_eat < 0 || info->time_to_sleep < 0 ||
-		info->philo->number_of_philosophers > 250)
+	info->number_of_philosophers = ft_atoi(argv[1]);
+	info->philo = malloc(sizeof(t_philo) * info->number_of_philosophers);
+	if(!info->philo)
 		return (1);
+	init_thinkeatsleep(info);
+	info->philo->all_ate = 0;
+	info->philo->died = 0;
 	if (argv[5])
 	{
-		info->meals = ft_atoi(argv[5]);
-		if (info->meals <= 0)
+		info->philo->meals = ft_atoi(argv[5]);
+		if (info->philo->meals <= 0)
 			return (1);
 	}
 	else
-		info->meals = -1;
-	ft_init_philo(info);
+		info->philo->meals = -1;
+	init_philo2(info);
 }
 
 int main(int argc, char **argv)
