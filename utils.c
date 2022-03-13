@@ -5,11 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/13 07:14:44 by calzino           #+#    #+#             */
-/*   Updated: 2022/03/13 07:14:46 by calzino          ###   ########.fr       */
+/*   Created: 2021/11/30 16:54:19 by eperaita          #+#    #+#             */
+/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "philosophers.h"
 
 int	ft_atoi(const char *str)
@@ -39,7 +40,7 @@ void	ft_free(t_info *info, t_forks *forks)
 	int	i;
 
 	i = -1;
-	while (++i < info->number_of_philosophers)
+	while (++i < info->nphilo)
 		pthread_mutex_destroy(&forks[i].mutex);
 	free(forks);
 	free(info->thread);

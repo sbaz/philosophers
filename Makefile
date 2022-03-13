@@ -1,3 +1,4 @@
+#Makefile
 NAME = philo
 
 CC = clang
@@ -8,7 +9,7 @@ SRCS = main.c\
 	  utils.c\
 	  time.c\
 	  routine.c\
-	  error.c\
+	  errors.c\
 
 OBJ =  $(SRCS:.c=.o)
 

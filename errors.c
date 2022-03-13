@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/08 10:16:47 by pceccoli          #+#    #+#             */
-/*   Updated: 2022/03/13 07:13:36 by calzino          ###   ########.fr       */
+/*   Created: 2022/02/08 10:16:47 by pceccoli          #+#    #+#             */
+/*   Updated: 2022/03/13 08:09:09 by calzino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <philosophers.h>
+#include "philosophers.h"
 
-int	ft_perror_philo(char *str)
+int	ft_perror(char *str)
 {
-	printf("%s", str);
+	printf("%s\n", str);
 	return (1);
 }

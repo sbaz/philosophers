@@ -1,22 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/13 07:40:30 by calzino           #+#    #+#             */
+/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <sys/time.h>
 # include <unistd.h>
 # include <pthread.h>
-# include <stdlib.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/time.h>
 
-# define ERR_ARG	"Wrong Number of Arguments"
-# define ERR_ARG2	"Error Setting Variables of Simulation"
-# define ERR_INIT	"Error Initializing Philosophers"
-
-# define TAKE_FRK	"has taken a fork\n"
-# define THINKING	"is thinking\n"
-# define DIED		"died\n"
-# define SLEEP		"is sleeping\n"
-# define EATING		"is eating\n"
+# define ERR_ARG1 "Wrong number of arguments"
+# define ERR_ARG2 "Error in variable initialization"
+# define ERR_INIT "Error initializing simulation"
 
 typedef struct s_forks
 {
@@ -26,14 +32,14 @@ typedef struct s_forks
 
 typedef struct s_info
 {
-	int				number_of_philosophers;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				meals;
-	int				death;
-	struct timeval	startime;
 	pthread_t		*thread;
+	struct timeval	startime;
+	int				nphilo;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
+	int				death;
+	int				ndinner;
 	pthread_mutex_t	*deadlock;
 }	t_info;
 
@@ -41,14 +47,14 @@ typedef struct s_philo
 {
 	int				id;
 	int				group;
-	int				eated;
 	struct timeval	eatime;
+	int				eated;
 	t_info			*info;
 	t_forks			*forks;
 	pthread_mutex_t	*mutex;
 }	t_philo;
 
-void		*routine(void *philo);
+void		*philos_dictator(void *philo);
 int			is_dead(t_philo *philo);
 int			any_dead(t_philo *philo);
 long int	o_clock(t_philo *philo);
@@ -56,7 +62,6 @@ int			my_uslip(t_philo *philo, int time);
 int			eating(t_philo *philo);
 int			sleeping(t_philo *philo);
 int			thinking(t_philo *philo);
-int			ft_perror_philo(char *str);
 int			ft_atoi(const char *str);
 void		ft_free(t_info *info, t_forks *forks);
 #endif

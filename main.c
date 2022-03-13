@@ -3,166 +3,118 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 16:19:46 by jkosiara          #+#    #+#             */
-/*   Updated: 2022/03/13 07:30:01 by pceccoli         ###   ########.fr       */
+/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <unistd.h>
-// #include <stdlib.h>
-// #include <stdio.h>
-// #include <pthread.h>
-// #include <sys/time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "philosophers.h"
 
-// typedef struct s_philo
-// {
-// 	int fork_l;
-// 	int fork_r;
-// 	int pos;
-// }				t_philo;
-
-// typedef struct s_info{
-// 	int number_of_philosophers;
-// 	int time_to_die;
-// 	int time_to_eat;
-// 	int time_to_sleep;
-// 	t_philo		philo;
-// }				t_info;
-
-// pthread_mutex_t mutex;
-
-// // int		ft_atoi(char *str)
-// {
-// 	int	i;
-// 	int	sign;
-// 	int	num;
-
-// 	i = 0;
-// 	sign = 1;
-// 	num = 0;
-// 	while ((str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
-// 	|| (str[i] == '\r' || str[i] == '\v' || str[i] == '\f'))
-// 		i++;
-// 	if (str[i] == '-')
-// 		sign = -1;
-// 	if (str[i] == '-' || str[i] == '+')
-// 		i++;
-// 	while (str[i] >= '0' && str[i] <= '9')
-// 		num = num * 10 + (str[i++] - '0');
-// 	return (num * sign);
-// }
-
-// static void	ft_parsing(t_info *info, int argc, char *argv[])
-// {
-// 	info->number_of_philosophers = ft_atoi(argv[1]);
-// 	info->time_to_die = ft_atoi(argv[2]);
-// 	info->time_to_eat = ft_atoi(argv[3]);
-// 	info->time_to_sleep = ft_atoi(argv[4]);
-// }
-
-// static int ft_check_arg(t_info *info, int argc)
-// {
-// 	if (argc <= 0)
-// 		return(1);
-// 	if (argc == 5 && 
-// 		return (1);
-// 	if (info->time_to_die <= 0)
-// 		return (1);
-// 	if (info->time_to_eat <=0)
-// 		return (1);
-// 	if (info->time_to_sleep <= 0)
-// 		return (1);
-// 	return(1);
-// }
-
-// void* routine(t_info *info)
-// {
-// 	philo->fork_l[1][info->philo] = 1;
-// 	philo->fork_r[1][%info->philo + 1] = 1;	
-
-// }
-
-void	declare_philosophers(t_info *info)
+static int	init(t_info *info, t_forks **forks)
 {
-	int i;
+	t_philo	philo;
+	int		i;
 
-	i = 0;
-	while(i < info->philo->number_of_philosophers)
+	philo.mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	if (!philo.mutex)
+		return (1);
+	pthread_mutex_init(philo.mutex, NULL);
+	i = -1;
+	while (++i < info->nphilo)
 	{
-		if (pthread_mutex_lock(info->philo->fork_l))
-			return i;
-	}
-}
-
-static int ft_check_args(char **argv)
-{
-	int i;
-
-	i = 1;
-	while (argv[i])
-	{
-		if (!ft_is_digit(argv[i]) || (!ft_atoi(argv[i])))
+		pthread_mutex_lock(philo.mutex);
+		philo.info = info;
+		philo.forks = *forks;
+		philo.id = i + 1;
+		if (pthread_create(&info->thread[i]
+				, NULL, &philos_dictator, &philo) != 0)
 			return (1);
-		i++;
 	}
+	gettimeofday(&info->startime, NULL);
+	i = -1;
+	while (++i < info->nphilo)
+		pthread_join(info->thread[i], NULL);
+	pthread_mutex_destroy(philo.mutex);
+	free(philo.mutex);
+	return (0);
 }
 
-int	ft_init_philo(t_info *info)
+static int	set_forks(t_info *info, t_forks **forks)
 {
-	info->philo->mutex = malloc(sizeof(info->philo->mutex) *
-		info->philo->number_of_philosophers);
-	info->philo->forks = malloc(sizeof(info->philo->forks) *
-		info->philo->number_of_philosophers);
-	if (!info->philo->mutex || !info->philo->forks)
-		return (0);
-	memset(info->philo->forks, 0, info->philo->number_of_philosophers);
-	ft_init_threads_mutexs(info);
-	if (!ft_philos_launch(info))
-		return (0);
-	return (1);
+	int	i;
 
-}
-
-int	init_philo(char **argv, t_info *info)
-{
-	if (ft_check_args(argv))
+	info->thread = (pthread_t *)malloc(info->nphilo * sizeof(pthread_t));
+	*forks = (t_forks *)malloc(info->nphilo * sizeof(t_forks));
+	if (!info->thread || !forks)
 		return (1);
-	info->philo->number_of_philosophers = ft_atoi(argv[1]);
-	info->time_to_die = ft_atoi(argv[2]);
-	info->time_to_eat = ft_atoi(argv[3]);
-	info->time_to_sleep = ft_atoi(argv[4]);
-	info->all_ate = 0;
-	info->died = 0;
-	if (info->philo->number_of_philosophers < 2 || info->time_to_die < 0 || 
-		info->time_to_eat < 0 || info->time_to_sleep < 0 ||
-		info->philo->number_of_philosophers > 250)
-		return (1);
-	if (argv[5])
+	i = -1;
+	while (++i < info->nphilo)
 	{
-		info->meals = ft_atoi(argv[5]);
-		if (info->meals <= 0)
+		(*forks + i)->fork = 1;
+		if (pthread_mutex_init(&(*forks + i)->mutex, NULL))
+			return (1);
+	}
+	return (0);
+}
+
+static int	set_info(t_info *info, t_forks **forks, char **argv, int argc)
+{
+	info->startime.tv_sec = 0;
+	info->startime.tv_usec = 0;
+	info->nphilo = ft_atoi(argv[1]);
+	info->t_die = ft_atoi(argv[2]);
+	info->t_eat = ft_atoi(argv[3]);
+	info->t_sleep = ft_atoi(argv[4]);
+	if (info->nphilo < 0 || info->t_die <= 0
+		|| info->t_eat <= 0 || info->t_sleep <= 0)
+		return (1);
+	if (argc == 6)
+	{
+		info->ndinner = ft_atoi(argv[5]);
+		if (info->ndinner == 0)
 			return (1);
 	}
 	else
-		info->meals = -1;
-	ft_init_philo(info);
+		info->ndinner = 0;
+	info->death = 0;
+	info->deadlock = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	if (!info->deadlock)
+		return (1);
+	pthread_mutex_init(info->deadlock, NULL);
+	if (set_forks(info, forks))
+		return (1);
+	return (0);
 }
 
-int main(int argc, char **argv)
+int	error(int error)
 {
-	t_info info;
-	int ret;
+	if (error == 1)
+		write(1, "Invalid arguments\n", 18);
+	if (error == 2)
+		write(1, "The info is not set\n", 21);
+	if (error == 3)
+		write(1, "Philosophers not created\n", 20);
+	return (1);
+}
+
+int	main(int argc, char **argv)
+{
+	t_info	info;
+	t_forks	*forks;
 
 	if (argc != 5 && argc != 6)
-		return (ft_err(ERR_ARG));
-	if (init_philo(argv, &info) == 1)
-		return (ft_err(ERR_ARG_2));
-	if (init_pthread(&info) == 1)
-		ft_philo(&info);
-	else
-		return (ft_err(ERR_INIT));	
+		return (error(1));
+	if (set_info(&info, &forks, argv, argc))
+		return (error(2));
+	if (info.nphilo == 0)
+		return (0);
+	if (init(&info, &forks))
+		return (error(3));
+	ft_free(&info, forks);
 	return (0);
 }
