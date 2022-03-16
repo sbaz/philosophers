@@ -6,13 +6,10 @@
 /*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 16:19:46 by jkosiara          #+#    #+#             */
-/*   Updated: 2022/03/16 21:50:06 by pceccoli         ###   ########.fr       */
+/*   Updated: 2022/03/16 23:47:46 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "philosophers.h"
 
 static int	init(t_info *info, t_forks **forks)
@@ -32,10 +29,10 @@ static int	init(t_info *info, t_forks **forks)
 		philo.forks = *forks;
 		philo.id = i + 1;
 		if (pthread_create(&info->thread[i]
-				, NULL, &philos_dictator, &philo) != 0)
+				, NULL, &ft_routine, &philo) != 0)
 			return (1);
 	}
-	gettimeofday(&info->startime, NULL);
+	gettimeofday(&info->start, NULL);
 	i = -1;
 	while (++i < info->num_philo)
 		pthread_join(info->thread[i], NULL);
@@ -64,8 +61,8 @@ static int	set_forks(t_info *info, t_forks **forks)
 
 static int	set_info(t_info *info, t_forks **forks, char **argv, int argc)
 {
-	info->startime.tv_sec = 0;
-	info->startime.tv_usec = 0;
+	info->start.tv_sec = 0;
+	info->start.tv_usec = 0;
 	info->num_philo = ft_atoi(argv[1]);
 	info->time_to_die = ft_atoi(argv[2]);
 	info->time_to_eat = ft_atoi(argv[3]);
@@ -98,7 +95,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 		return (ft_perror(ERR_ARG1));
-	if (set_info(&info, &forks, argv, argc))
+	if (arg_check(argc, argv) && set_info(&info, &forks, argv, argc))
 		return (ft_perror(ERR_ARG2));
 	if (info.num_philo == 0)
 		return (0);

@@ -6,11 +6,10 @@
 /*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 21:40:00 by pceccoli          #+#    #+#             */
-/*   Updated: 2022/03/16 21:48:46 by pceccoli         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:40:51 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "philosophers.h"
 
 static void	philos_routine(t_philo *philo)
@@ -56,18 +55,18 @@ static int	my_group(t_philo *philo)
 	return (group);
 }
 
-void	*philos_dictator(void *philo)
+void	*ft_routine(void *philo)
 {
-	t_philo	me_philo;
+	t_philo	copy;
 
-	me_philo = *(t_philo *)philo;
-	pthread_mutex_unlock(me_philo.mutex);
-	me_philo.eated = 0;
-	while (!me_philo.info->startime.tv_sec
-		&& !me_philo.info->startime.tv_usec)
+	copy = *(t_philo *)philo;
+	pthread_mutex_unlock(copy.mutex);
+	copy.eated = 0;
+	while (!copy.info->start.tv_sec
+		&& !copy.info->start.tv_usec)
 		usleep(10);
-	me_philo.eatime = me_philo.info->startime;
-	me_philo.group = my_group(&me_philo);
-	philos_routine(&me_philo);
+	copy.lunch = copy.info->start;
+	copy.group = my_group(&copy);
+	philos_routine(&copy);
 	return (NULL);
 }

@@ -6,11 +6,10 @@
 /*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 21:39:45 by pceccoli          #+#    #+#             */
-/*   Updated: 2022/03/16 21:51:14 by pceccoli         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:40:07 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "philosophers.h"
 
 int	is_dead(t_philo *philo)
@@ -20,7 +19,7 @@ int	is_dead(t_philo *philo)
 
 	gettimeofday(&now, NULL);
 	period = (now.tv_sec * 1000 + now.tv_usec / 1000)
-		- (philo->eatime.tv_sec * 1000 + philo->eatime.tv_usec / 1000);
+		- (philo->lunch.tv_sec * 1000 + philo->lunch.tv_usec / 1000);
 	if (period > philo->info->time_to_die)
 		return (1);
 	return (0);
@@ -52,8 +51,8 @@ long int	o_clock(t_philo *philo)
 
 	gettimeofday(&now, NULL);
 	ms = (now.tv_sec * 1000 + now.tv_usec / 1000)
-		- (philo->info->startime.tv_sec * 1000
-			+ philo->info->startime.tv_usec / 1000);
+		- (philo->info->start.tv_sec * 1000
+			+ philo->info->start.tv_usec / 1000);
 	return (ms);
 }
 

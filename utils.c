@@ -6,12 +6,41 @@
 /*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 21:39:38 by pceccoli          #+#    #+#             */
-/*   Updated: 2022/03/16 21:47:43 by pceccoli         ###   ########.fr       */
+/*   Updated: 2022/03/16 23:48:48 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "philosophers.h"
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
+}
+
+int	arg_check(int argc, char **argv)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (++i < argc)
+	{
+		j = -1;
+		while (argv[i][++j])
+		{
+			if (!ft_isdigit(argv[i][j]))
+				return (0);
+			if (j > 10)
+				return (0);
+		}
+		if (j == 10)
+			return (0);
+	}
+	return (1);
+}
 
 int	ft_atoi(const char *str)
 {
@@ -24,13 +53,13 @@ int	ft_atoi(const char *str)
 	nb = 0;
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	if (str[i] == '-' || str[i] == '+')
+	if ((str[i] == '-' || str[i] == '+') && (ft_isdigit(str[i + 1])))
 	{
 		if (str[i] == '-')
 			neg = -1;
 		i++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
+	while (ft_isdigit(str[i]))
 		nb = nb * 10 + (str[i++] - 48);
 	return (nb * neg);
 }

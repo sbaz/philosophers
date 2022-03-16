@@ -6,11 +6,10 @@
 /*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 21:39:07 by pceccoli          #+#    #+#             */
-/*   Updated: 2022/03/16 21:48:28 by pceccoli         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:40:04 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "philosophers.h"
 
 static int	borrowed(t_philo *philo, int on)
@@ -69,7 +68,8 @@ int	thinking(t_philo *philo)
 	}
 	else if (philo->info->num_philo % 2 == 0)
 	{
-		if (my_uslip(philo, (philo->info->time_to_eat - philo->info->time_to_sleep)))
+		if (my_uslip(philo, (philo->info->time_to_eat
+					- philo->info->time_to_sleep)))
 			return (1);
 	}
 	return (0);
@@ -88,7 +88,7 @@ int	eating(t_philo *philo)
 {
 	if (get_fork_and_return(philo, 0, 0))
 		return (1);
-	gettimeofday(&philo->eatime, NULL);
+	gettimeofday(&philo->lunch, NULL);
 	printf("%ld %d is eating\n", o_clock(philo), philo->id);
 	if (my_uslip(philo, philo->info->time_to_eat))
 		return (1);

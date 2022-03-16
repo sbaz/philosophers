@@ -6,7 +6,7 @@
 /*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 07:40:30 by calzino           #+#    #+#             */
-/*   Updated: 2022/03/16 21:49:55 by pceccoli         ###   ########.fr       */
+/*   Updated: 2022/03/16 23:48:08 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_forks
 typedef struct s_info
 {
 	pthread_t		*thread;
-	struct timeval	startime;
+	struct timeval	start;
 	int				num_philo;
 	int				time_to_die;
 	int				time_to_eat;
@@ -47,14 +47,15 @@ typedef struct s_philo
 {
 	int				id;
 	int				group;
-	struct timeval	eatime;
+	struct timeval	lunch;
 	int				eated;
 	t_info			*info;
 	t_forks			*forks;
 	pthread_mutex_t	*mutex;
 }	t_philo;
 
-void		*philos_dictator(void *philo);
+int			arg_check(int argc, char **argv);
+void		*ft_routine(void *philo);
 int			ft_perror(char *str);
 int			is_dead(t_philo *philo);
 int			any_dead(t_philo *philo);
