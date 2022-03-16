@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/11 20:28:38 by eperaita          #+#    #+#             */
-/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
+/*   Created: 2022/03/16 21:39:45 by pceccoli          #+#    #+#             */
+/*   Updated: 2022/03/16 21:51:14 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "philosophers.h"
-
-/////////////////////////DEADS///////////////////
 
 int	is_dead(t_philo *philo)
 {
@@ -23,7 +21,7 @@ int	is_dead(t_philo *philo)
 	gettimeofday(&now, NULL);
 	period = (now.tv_sec * 1000 + now.tv_usec / 1000)
 		- (philo->eatime.tv_sec * 1000 + philo->eatime.tv_usec / 1000);
-	if (period > philo->info->t_die)
+	if (period > philo->info->time_to_die)
 		return (1);
 	return (0);
 }
@@ -47,8 +45,6 @@ int	any_dead(t_philo *philo)
 	return (0);
 }
 
-////////////////// TIMESTAMP //////////////////
-
 long int	o_clock(t_philo *philo)
 {
 	struct timeval	now;
@@ -60,8 +56,6 @@ long int	o_clock(t_philo *philo)
 			+ philo->info->startime.tv_usec / 1000);
 	return (ms);
 }
-
-//////////////////MY USLIP //////////////////////////
 
 int	my_uslip(t_philo *philo, int time)
 {

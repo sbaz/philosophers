@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/11 21:03:51 by eperaita          #+#    #+#             */
-/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
+/*   Created: 2022/03/16 21:39:07 by pceccoli          #+#    #+#             */
+/*   Updated: 2022/03/16 21:48:28 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	borrowed(t_philo *philo, int on)
 	int	fork;
 
 	if (philo->id == 1)
-		fork = philo->info->nphilo - 1;
+		fork = philo->info->num_philo - 1;
 	else
 		fork = philo->id - 2;
 	if (philo->forks[fork].fork != on)
@@ -44,7 +44,7 @@ static int	get_fork_and_return(t_philo *philo, int on, int wait)
 			pthread_mutex_unlock(&philo->forks[philo->id - 1].mutex);
 			if (on == 0)
 				printf("%ld %d has taken a fork\n", o_clock(philo), philo->id);
-			if (philo->info->nphilo != 1)
+			if (philo->info->num_philo != 1)
 			{
 				borrowed(philo, on);
 				wait = 1;
@@ -61,15 +61,15 @@ int	thinking(t_philo *philo)
 {
 	if (philo->eated)
 		printf("%ld %d is thinking\n", o_clock(philo), philo->id);
-	if (philo->info->nphilo % 2 != 0)
+	if (philo->info->num_philo % 2 != 0)
 	{
-		if (my_uslip(philo, ((philo->info->t_eat * 2)
-					- philo->info->t_sleep)))
+		if (my_uslip(philo, ((philo->info->time_to_eat * 2)
+					- philo->info->time_to_sleep)))
 			return (1);
 	}
-	else if (philo->info->nphilo % 2 == 0)
+	else if (philo->info->num_philo % 2 == 0)
 	{
-		if (my_uslip(philo, (philo->info->t_eat - philo->info->t_sleep)))
+		if (my_uslip(philo, (philo->info->time_to_eat - philo->info->time_to_sleep)))
 			return (1);
 	}
 	return (0);
@@ -79,7 +79,7 @@ int	sleeping(t_philo *philo)
 {
 	if (philo->eated)
 		printf("%ld %d is sleeping\n", o_clock(philo), philo->id);
-	if (my_uslip(philo, philo->info->t_sleep))
+	if (my_uslip(philo, philo->info->time_to_sleep))
 		return (1);
 	return (0);
 }
@@ -90,7 +90,7 @@ int	eating(t_philo *philo)
 		return (1);
 	gettimeofday(&philo->eatime, NULL);
 	printf("%ld %d is eating\n", o_clock(philo), philo->id);
-	if (my_uslip(philo, philo->info->t_eat))
+	if (my_uslip(philo, philo->info->time_to_eat))
 		return (1);
 	get_fork_and_return(philo, 1, 0);
 	return (0);

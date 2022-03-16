@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/30 17:20:19 by eperaita          #+#    #+#             */
-/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
+/*   Created: 2022/03/16 21:40:00 by pceccoli          #+#    #+#             */
+/*   Updated: 2022/03/16 21:48:46 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ static void	philos_routine(t_philo *philo)
 			if (eating(philo))
 				break ;
 			philo->eated++;
-			if (philo->info->ndinner
-				&& (philo-> eated == philo->info->ndinner))
+			if (philo->info->meals
+				&& (philo-> eated == philo->info->meals))
 				break ;
 		}
 	}
@@ -47,7 +47,7 @@ static int	my_group(t_philo *philo)
 	int	group;
 
 	group = 0;
-	if (philo->info->nphilo % 2 != 0 && philo->id == philo->info->nphilo)
+	if (philo->info->num_philo % 2 != 0 && philo->id == philo->info->num_philo)
 		group = 3;
 	else if (philo->id % 2 != 0)
 		group = 1;

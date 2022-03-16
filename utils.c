@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/30 16:54:19 by eperaita          #+#    #+#             */
-/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
+/*   Created: 2022/03/16 21:39:38 by pceccoli          #+#    #+#             */
+/*   Updated: 2022/03/16 21:47:43 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_free(t_info *info, t_forks *forks)
 	int	i;
 
 	i = -1;
-	while (++i < info->nphilo)
+	while (++i < info->num_philo)
 		pthread_mutex_destroy(&forks[i].mutex);
 	free(forks);
 	free(info->thread);

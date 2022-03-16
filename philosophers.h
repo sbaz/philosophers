@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calzino <calzino@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pceccoli <pceccoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 07:40:30 by calzino           #+#    #+#             */
-/*   Updated: 2022/03/13 07:59:59 by calzino          ###   ########.fr       */
+/*   Updated: 2022/03/16 21:49:55 by pceccoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILOSOPHERS_H
+# define PHILOSOPHERS_H
 
 # include <unistd.h>
 # include <pthread.h>
@@ -34,12 +34,12 @@ typedef struct s_info
 {
 	pthread_t		*thread;
 	struct timeval	startime;
-	int				nphilo;
-	int				t_die;
-	int				t_eat;
-	int				t_sleep;
+	int				num_philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
 	int				death;
-	int				ndinner;
+	int				meals;
 	pthread_mutex_t	*deadlock;
 }	t_info;
 
@@ -55,6 +55,7 @@ typedef struct s_philo
 }	t_philo;
 
 void		*philos_dictator(void *philo);
+int			ft_perror(char *str);
 int			is_dead(t_philo *philo);
 int			any_dead(t_philo *philo);
 long int	o_clock(t_philo *philo);
